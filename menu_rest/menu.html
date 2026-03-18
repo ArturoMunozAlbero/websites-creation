@@ -3,181 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chez Cook Restobar - Menú</title>
+    <title>Chez Cook Restobar - Menú Digital</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #edece8; /* Soft grey/beige from your image */
-            --text-color: #4a4a4a;
-            --accent-color: #6b6b6b;
+            --bg-color: #edece8;
+            --text-color: #333;
+            --accent-color: #5d4037;
+            --card-bg: #ffffff;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: 'Lato', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
+            margin: 0; padding: 0;
+            display: flex; justify-content: center;
         }
 
-        /* The "Paper" Container */
         .menu-paper {
-            width: 100%;
-            max-width: 600px;
-            padding: 60px 40px;
+            width: 100%; max-width: 800px;
+            padding: 40px 20px;
             text-align: center;
             position: relative;
-            min-height: 100vh;
         }
 
-        /* Decorative Leaves (Using your images folder) */
-        .decor-top-left {
-            position: absolute;
-            top: 0; left: 0;
-            width: 150px;
-            pointer-events: none;
+        /* Header Styling */
+        header { margin-bottom: 40px; position: relative; }
+        .brand-name { letter-spacing: 4px; font-size: 0.8em; font-weight: 700; margin-bottom: 5px; }
+        .menu-title { 
+            font-family: 'Playfair Display', serif; 
+            font-size: clamp(3em, 8vw, 4.5em); 
+            text-transform: uppercase; 
+            letter-spacing: 10px;
+            margin: 10px 0;
         }
 
-        .decor-bottom-right {
-            position: absolute;
-            bottom: 0; right: 0;
-            width: 200px;
-            transform: rotate(0deg);
-            pointer-events: none;
+        /* Filter Controls - Upper Right */
+        .filter-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
         }
 
-        header h2 {
-            font-weight: 400;
-            letter-spacing: 4px;
+        #dietary-filter {
+            padding: 10px 15px;
+            border-radius: 25px;
+            border: 1px solid #ccc;
+            background: white;
+            font-family: 'Lato', sans-serif;
             font-size: 0.9em;
-            margin-bottom: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .menu-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 4em;
-            margin: 20px 0;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-        }
-
-        .divider {
-            width: 60%;
-            margin: 0 auto 40px auto;
-            border-bottom: 1px solid #ccc;
-            position: relative;
-        }
-        .divider::after {
-            content: "✦";
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg-color);
-            padding: 0 10px;
-            color: var(--accent-color);
-        }
-
-        .menu-section {
-            margin-bottom: 50px;
-        }
-
+        /* Grid & Cards */
+        .menu-section { margin-bottom: 60px; }
         .section-title {
             font-family: 'Playfair Display', serif;
             text-transform: uppercase;
-            letter-spacing: 5px;
-            font-size: 1.4em;
-            margin-bottom: 20px;
-            color: var(--accent-color);
+            letter-spacing: 4px;
+            border-bottom: 1px solid #ccc;
+            display: inline-block;
+            padding-bottom: 5px;
+            margin-bottom: 30px;
         }
 
-        .item {
-            margin-bottom: 15px;
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: 1.2em;
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
         }
 
-        .price {
-            display: block;
-            font-family: 'Lato', sans-serif;
-            font-style: normal;
-            font-size: 0.8em;
-            margin-top: 5px;
-            font-weight: bold;
-            opacity: 0.7;
+        .dish-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            text-align: left;
+        }
+        .dish-card:hover { transform: translateY(-5px); }
+
+        .dish-image {
+            width: 100%; height: 200px;
+            object-fit: cover;
+            background-color: #ddd;
         }
 
-        .separator-text {
-            font-size: 0.8em;
-            margin: 5px 0;
-            opacity: 0.5;
+        .dish-info { padding: 20px; }
+        .dish-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .dish-name { font-family: 'Playfair Display', serif; font-size: 1.2em; margin: 0; flex: 1; }
+        .dish-price { font-weight: bold; color: var(--accent-color); margin-left: 10px; }
+
+        /* Tags */
+        .dietary-icons { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
+        .icon-tag {
+            font-size: 0.65em; padding: 2px 8px;
+            border-radius: 12px; text-transform: uppercase; font-weight: 700;
+        }
+        .vg { background: #e8f5e9; color: #2e7d32; }
+        .gf { background: #fff3e0; color: #ef6c00; }
+        .sf { background: #e3f2fd; color: #1565c1; }
+        .ef { background: #f3e5f5; color: #7b1fa2; }
+
+        @media (max-width: 600px) {
+            .menu-title { font-size: 2.5em; }
+            .filter-container { justify-content: center; }
         }
     </style>
 </head>
 <body>
 
-    <img src="images/leaves-top.png" class="decor-top-left" alt="">
-    <img src="images/leaves-bottom.png" class="decor-bottom-right" alt="">
-
     <div class="menu-paper">
         <header>
-            <h2>CHEZ COOK RESTOBAR</h2>
-            <div class="menu-title">Menu</div>
-            <div class="divider"></div>
+            <div class="brand-name">CHEZ COOK RESTOBAR</div>
+            <h1 class="menu-title">Menu</h1>
         </header>
 
+        <div class="filter-container">
+            <select id="dietary-filter" onchange="filterMenu()">
+                <option value="all">Mostrar Todo</option>
+                <option value="isVeg">Vegetariano</option>
+                <option value="isGF">Sin Gluten (GF)</option>
+                <option value="isSF">Sin Azúcar</option>
+                <option value="isEF">Sin Huevo</option>
+            </select>
+        </div>
+
         <div id="menu-container">
-            <p>Cargando menú...</p>
+            <p>Cargando delicias...</p>
         </div>
     </div>
 
     <script>
         const sheetURL = 'https://docs.google.com/spreadsheets/d/14gD_HycpGeMo9x45kG5pYTKxl-yG-cN4tyYR25obW-k/gviz/tq?tqx=out:csv';
-        const sectionOrder = ["entradas", "principales", "postres", "bebidas"];
+        const sectionOrder = ["entradas", "principales", "postres"];
+        let allMenuItems = [];
 
         async function loadMenu() {
             try {
                 const response = await fetch(`${sheetURL}&v=${new Date().getTime()}`);
                 const data = await response.text();
-                
                 const rows = data.split('\n').slice(1); 
-                const menuItems = rows.map(row => {
-                    const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                
+                allMenuItems = rows.map(row => {
+                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim());
                     return {
-                        name: columns[0]?.replace(/"/g, '').trim(),
-                        price: columns[1]?.replace(/"/g, '').trim(),
-                        type: columns[2]?.replace(/"/g, '').trim().toLowerCase()
+                        name: cols[0],
+                        price: cols[1],
+                        type: cols[2]?.toLowerCase(),
+                        image: cols[3] || 'default.jpg',
+                        isVeg: cols[4]?.toLowerCase() === 'yes',
+                        isGF: cols[5]?.toLowerCase() === 'yes',
+                        isSF: cols[6]?.toLowerCase() === 'yes',
+                        isEF: cols[7]?.toLowerCase() === 'yes'
                     };
                 });
 
-                const container = document.getElementById('menu-container');
-                container.innerHTML = ''; 
+                renderMenu('all');
+            } catch (error) {
+                document.getElementById('menu-container').innerHTML = "Error al sincronizar con Google Sheets.";
+            }
+        }
 
-                sectionOrder.forEach(section => {
-                    const filteredItems = menuItems.filter(item => item.type === section);
-                    
-                    if (filteredItems.length > 0) {
-                        const sectionHtml = `
-                            <section class="menu-section">
-                                <h2 class="section-title">${section}</h2>
-                                ${filteredItems.map((item, index) => `
-                                    <div class="item">
-                                        ${item.name}
-                                        <span class="price">$${item.price}</span>
-                                        ${index < filteredItems.length - 1 ? '<div class="separator-text">or</div>' : ''}
+        function renderMenu(filter) {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = '';
+
+            sectionOrder.forEach(section => {
+                const filteredItems = allMenuItems.filter(item => {
+                    const matchesType = item.type === section;
+                    const matchesFilter = filter === 'all' || item[filter] === true;
+                    return matchesType && matchesFilter;
+                });
+
+                if (filteredItems.length > 0) {
+                    const sectionHtml = `
+                        <section class="menu-section">
+                            <h2 class="section-title">${section}</h2>
+                            <div class="menu-grid">
+                                ${filteredItems.map(item => `
+                                    <div class="dish-card">
+                                        <img src="images/${item.image}" class="dish-image" onerror="this.src='images/default.jpg'">
+                                        <div class="dish-info">
+                                            <div class="dish-header">
+                                                <h3 class="dish-name">${item.name}</h3>
+                                                <span class="dish-price">$${item.price}</span>
+                                            </div>
+                                            <div class="dietary-icons">
+                                                ${item.isVeg ? '<span class="icon-tag vg">Veggie</span>' : ''}
+                                                ${item.isGF ? '<span class="icon-tag gf">GF</span>' : ''}
+                                                ${item.isSF ? '<span class="icon-tag sf">Sugar Free</span>' : ''}
+                                                ${item.isEF ? '<span class="icon-tag ef">Egg Free</span>' : ''}
+                                            </div>
+                                        </div>
                                     </div>
                                 `).join('')}
-                            </section>
-                        `;
-                        container.innerHTML += sectionHtml;
-                    }
-                });
-            } catch (error) {
-                document.getElementById('menu-container').innerHTML = "Error al cargar el menú.";
+                            </div>
+                        </section>
+                    `;
+                    container.innerHTML += sectionHtml;
+                }
+            });
+            
+            if(container.innerHTML === '') {
+                container.innerHTML = "<p>No hay platos que coincidan con este filtro.</p>";
             }
+        }
+
+        function filterMenu() {
+            const val = document.getElementById('dietary-filter').value;
+            renderMenu(val);
         }
 
         loadMenu();
