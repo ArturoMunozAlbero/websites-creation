@@ -42,25 +42,28 @@
         /* Filter Controls - Upper Right */
         .filter-container {
 			position: sticky;
-			top: 60px; /* This must be the height of the Nav Bar above it */
+			top: 65px; /* Adjust based on your Nav Bar height */
 			display: flex;
 			justify-content: flex-end;
 			margin-bottom: 20px;
-			padding: 10px 0;
+			padding: 10px 20px;
 			z-index: 1000;
-			background-color: var(--bg-color); /* Add background so text doesn't bleed through */
+			/* Remove background-color here to stop the "dragging background" effect */
+			background-color: transparent; 
+			pointer-events: none; /* Allows clicks to pass through the empty container space */
 		}
 
-        #dietary-filter {
-            padding: 10px 15px;
-            border-radius: 25px;
-            border: 1px solid #ccc;
-            background: white;
-            font-family: 'Lato', sans-serif;
-            font-size: 0.9em;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+		 #dietary-filter {
+			pointer-events: auto; /* Re-enables clicking for the button itself */
+			padding: 8px 15px;
+			border-radius: 20px;
+			border: 1px solid rgba(0,0,0,0.1);
+			background: white; /* Only the button has a background now */
+			font-family: 'Lato', sans-serif;
+			font-size: 0.85em;
+			cursor: pointer;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Adds a subtle shadow to make it float */
+		}
 
         /* Grid & Cards */
         .menu-section { margin-bottom: 130px; }
