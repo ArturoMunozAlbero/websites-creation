@@ -41,13 +41,15 @@
 
         /* Filter Controls - Upper Right */
         .filter-container {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 30px;
-            position: sticky;
-            top: 10px;
-            z-index: 100;
-        }
+			position: sticky;
+			top: 60px; /* This must be the height of the Nav Bar above it */
+			display: flex;
+			justify-content: flex-end;
+			margin-bottom: 20px;
+			padding: 10px 0;
+			z-index: 1000;
+			background-color: var(--bg-color); /* Add background so text doesn't bleed through */
+		}
 
         #dietary-filter {
             padding: 10px 15px;
@@ -61,7 +63,7 @@
         }
 
         /* Grid & Cards */
-        .menu-section { margin-bottom: 60px; }
+        .menu-section { margin-bottom: 130px; }
         .section-title {
             font-family: 'Playfair Display', serif;
             text-transform: uppercase;
@@ -118,11 +120,11 @@
 		/* Navigation Bar Styling */
 		.nav-scroll-container {
 			position: sticky;
-			top: 0;
+			top: 0; 
 			background-color: var(--bg-color);
-			z-index: 1000;
-			padding: 10px 0;
-			border-bottom: 1px solid rgba(0,0,0,0.05);
+			z-index: 1001; /* Higher z-index to stay on top */
+			padding: 15px 0;
+			border-bottom: 1px solid rgba(0,0,0,0.1);
 		}
 
 		.section-nav {
