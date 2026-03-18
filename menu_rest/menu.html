@@ -25,39 +25,53 @@
     </div>
 
 <script>
+    // Your specific Google Sheets CSV export link
+    const sheetURL = 'https://docs.google.com/spreadsheets/d/14gD_HycpGeMo9x45kG5pYTKxl-yG-cN4tyYR25obW-k/gviz/tq?tqx=out:csv';
     const sectionOrder = ["entradas", "principales", "postres"];
 
     async function loadMenu() {
-        const response = await fetch('data.csv');
-        const data = await response.text();
-        
-        // Parse CSV rows
-        const rows = data.split('\n').slice(1); // Skip header row
-        const menuItems = rows.map(row => {
-            const [name, price, type] = row.split(',');
-            return { name, price, type: type?.trim().toLowerCase() };
-        });
-
-        const container = document.getElementById('menu-container');
-
-        sectionOrder.forEach(section => {
-            const filteredItems = menuItems.filter(item => item.type === section);
+        try {
+            // Adding a timestamp prevents the browser from showing "old" prices
+            const response = await fetch(`${sheetURL}&v=${new Date().getTime()}`);
+            const data = await response.text();
             
-            if (filteredItems.length > 0) {
-                const sectionHtml = `
-                    <section class="menu-section">
-                        <h2 class="section-title">${section}</h2>
-                        ${filteredItems.map(item => `
-                            <div class="item">
-                                <span>${item.name}</span>
-                                <span class="price">$${item.price}</span>
-                            </div>
-                        `).join('')}
-                    </section>
-                `;
-                container.innerHTML += sectionHtml;
-            }
-        });
+            // Google Sheets CSV often wraps text in quotes: "Item Name","10.00","type"
+            // This regex cleans those quotes up
+            const rows = data.split('\n').slice(1); 
+            const menuItems = rows.map(row => {
+                const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                return {
+                    name: columns[0]?.replace(/"/g, '').trim(),
+                    price: columns[1]?.replace(/"/g, '').trim(),
+                    type: columns[2]?.replace(/"/g, '').trim().toLowerCase()
+                };
+            });
+
+            const container = document.getElementById('menu-container');
+            container.innerHTML = ''; // Clear "Loading..." text
+
+            sectionOrder.forEach(section => {
+                const filteredItems = menuItems.filter(item => item.type === section);
+                
+                if (filteredItems.length > 0) {
+                    const sectionHtml = `
+                        <section class="menu-section">
+                            <h2 class="section-title" style="text-transform: capitalize;">${section}</h2>
+                            ${filteredItems.map(item => `
+                                <div class="item">
+                                    <span>${item.name}</span>
+                                    <span class="price">$${item.price}</span>
+                                </div>
+                            `).join('')}
+                        </section>
+                    `;
+                    container.innerHTML += sectionHtml;
+                }
+            });
+        } catch (error) {
+            console.error("Error loading menu:", error);
+            document.getElementById('menu-container').innerHTML = "Error al cargar el menú.";
+        }
     }
 
     loadMenu();
