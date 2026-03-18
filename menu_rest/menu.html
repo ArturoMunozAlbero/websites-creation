@@ -114,6 +114,51 @@
             .menu-title { font-size: 2.5em; }
             .filter-container { justify-content: center; }
         }
+		
+		/* Navigation Bar Styling */
+		.nav-scroll-container {
+			position: sticky;
+			top: 0;
+			background-color: var(--bg-color);
+			z-index: 1000;
+			padding: 10px 0;
+			border-bottom: 1px solid rgba(0,0,0,0.05);
+		}
+
+		.section-nav {
+			display: flex;
+			justify-content: center;
+			gap: 20px;
+			overflow-x: auto;
+			white-space: nowrap;
+			padding: 5px 10px;
+		}
+
+		.section-nav a {
+			text-decoration: none;
+			color: var(--accent-color);
+			font-family: 'Playfair Display', serif;
+			text-transform: uppercase;
+			font-size: 0.9em;
+			letter-spacing: 2px;
+			padding: 5px 10px;
+			transition: opacity 0.3s;
+		}
+
+		.section-nav a:hover {
+			opacity: 0.6;
+		}
+
+		/* Ensure smooth scrolling when clicking links */
+		html {
+			scroll-behavior: smooth;
+		}
+
+		/* Add offset for sticky header so titles aren't hidden under the bar */
+		.menu-section {
+			scroll-margin-top: 80px; 
+		}
+		
     </style>
 </head>
 <body>
@@ -191,7 +236,7 @@
 
                 if (filteredItems.length > 0) {
                     const sectionHtml = `
-                        <section class="menu-section">
+                        <section class="menu-section" id="${section}">
                             <h2 class="section-title">${section}</h2>
                             <div class="menu-grid">
                                 ${filteredItems.map(item => `
