@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestro Menú</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; max-width: 800px; margin: auto; padding: 20px; background-color: #fdfaf6; }
+        header { text-align: center; padding: 40px 0; }
+        .menu-section { margin-bottom: 40px; }
+        .section-title { border-bottom: 2px solid #8d6e63; color: #5d4037; text-transform: uppercase; letter-spacing: 2px; }
+        .item { display: flex; justify-content: space-between; margin: 10px 0; font-size: 1.1em; }
+        .price { font-weight: bold; color: #2e7d32; }
+        .decor-img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🍽 Nuestro Menú</h1>
+    <img src="images/header-decor.jpg" alt="Decoración" class="decor-img">
+</header>
+
+<div id="menu-container">
+    </div>
+
+<script>
+    const sectionOrder = ["entradas", "principales", "postres"];
+
+    async function loadMenu() {
+        const response = await fetch('data.csv');
+        const data = await response.text();
+        
+        // Parse CSV rows
+        const rows = data.split('\n').slice(1); // Skip header row
+        const menuItems = rows.map(row => {
+            const [name, price, type] = row.split(',');
+            return { name, price, type: type?.trim().toLowerCase() };
+        });
+
+        const container = document.getElementById('menu-container');
+
+        sectionOrder.forEach(section => {
+            const filteredItems = menuItems.filter(item => item.type === section);
+            
+            if (filteredItems.length > 0) {
+                const sectionHtml = `
+                    <section class="menu-section">
+                        <h2 class="section-title">${section}</h2>
+                        ${filteredItems.map(item => `
+                            <div class="item">
+                                <span>${item.name}</span>
+                                <span class="price">$${item.price}</span>
+                            </div>
+                        `).join('')}
+                    </section>
+                `;
+                container.innerHTML += sectionHtml;
+            }
+        });
+    }
+
+    loadMenu();
+</script>
+</body>
+</html>
