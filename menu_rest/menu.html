@@ -3,78 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuestro Menú</title>
+    <title>Chez Cook Restobar - Menú</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; max-width: 800px; margin: auto; padding: 20px; background-color: #fdfaf6; }
-        header { text-align: center; padding: 40px 0; }
-        .menu-section { margin-bottom: 40px; }
-        .section-title { border-bottom: 2px solid #8d6e63; color: #5d4037; text-transform: uppercase; letter-spacing: 2px; }
-        .item { display: flex; justify-content: space-between; margin: 10px 0; font-size: 1.1em; }
-        .price { font-weight: bold; color: #2e7d32; }
-        .decor-img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin: 20px 0; }
+        :root {
+            --bg-color: #edece8; /* Soft grey/beige from your image */
+            --text-color: #4a4a4a;
+            --accent-color: #6b6b6b;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Lato', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* The "Paper" Container */
+        .menu-paper {
+            width: 100%;
+            max-width: 600px;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Decorative Leaves (Using your images folder) */
+        .decor-top-left {
+            position: absolute;
+            top: 0; left: 0;
+            width: 150px;
+            pointer-events: none;
+        }
+
+        .decor-bottom-right {
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 200px;
+            transform: rotate(0deg);
+            pointer-events: none;
+        }
+
+        header h2 {
+            font-weight: 400;
+            letter-spacing: 4px;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .menu-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4em;
+            margin: 20px 0;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        .divider {
+            width: 60%;
+            margin: 0 auto 40px auto;
+            border-bottom: 1px solid #ccc;
+            position: relative;
+        }
+        .divider::after {
+            content: "✦";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-color);
+            padding: 0 10px;
+            color: var(--accent-color);
+        }
+
+        .menu-section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .item {
+            margin-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.2em;
+        }
+
+        .price {
+            display: block;
+            font-family: 'Lato', sans-serif;
+            font-style: normal;
+            font-size: 0.8em;
+            margin-top: 5px;
+            font-weight: bold;
+            opacity: 0.7;
+        }
+
+        .separator-text {
+            font-size: 0.8em;
+            margin: 5px 0;
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>🍽 Nuestro Menú</h1>
-    <img src="images/header-decor.jpg" alt="Decoración" class="decor-img">
-</header>
+    <img src="images/leaves-top.png" class="decor-top-left" alt="">
+    <img src="images/leaves-bottom.png" class="decor-bottom-right" alt="">
 
-<div id="menu-container">
+    <div class="menu-paper">
+        <header>
+            <h2>CHEZ COOK RESTOBAR</h2>
+            <div class="menu-title">Menu</div>
+            <div class="divider"></div>
+        </header>
+
+        <div id="menu-container">
+            <p>Cargando menú...</p>
+        </div>
     </div>
 
-<script>
-    // Your specific Google Sheets CSV export link
-    const sheetURL = 'https://docs.google.com/spreadsheets/d/14gD_HycpGeMo9x45kG5pYTKxl-yG-cN4tyYR25obW-k/gviz/tq?tqx=out:csv';
-    const sectionOrder = ["entradas", "principales", "postres"];
+    <script>
+        const sheetURL = 'https://docs.google.com/spreadsheets/d/14gD_HycpGeMo9x45kG5pYTKxl-yG-cN4tyYR25obW-k/gviz/tq?tqx=out:csv';
+        const sectionOrder = ["entradas", "principales", "postres", "bebidas"];
 
-    async function loadMenu() {
-        try {
-            // Adding a timestamp prevents the browser from showing "old" prices
-            const response = await fetch(`${sheetURL}&v=${new Date().getTime()}`);
-            const data = await response.text();
-            
-            // Google Sheets CSV often wraps text in quotes: "Item Name","10.00","type"
-            // This regex cleans those quotes up
-            const rows = data.split('\n').slice(1); 
-            const menuItems = rows.map(row => {
-                const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                return {
-                    name: columns[0]?.replace(/"/g, '').trim(),
-                    price: columns[1]?.replace(/"/g, '').trim(),
-                    type: columns[2]?.replace(/"/g, '').trim().toLowerCase()
-                };
-            });
-
-            const container = document.getElementById('menu-container');
-            container.innerHTML = ''; // Clear "Loading..." text
-
-            sectionOrder.forEach(section => {
-                const filteredItems = menuItems.filter(item => item.type === section);
+        async function loadMenu() {
+            try {
+                const response = await fetch(`${sheetURL}&v=${new Date().getTime()}`);
+                const data = await response.text();
                 
-                if (filteredItems.length > 0) {
-                    const sectionHtml = `
-                        <section class="menu-section">
-                            <h2 class="section-title" style="text-transform: capitalize;">${section}</h2>
-                            ${filteredItems.map(item => `
-                                <div class="item">
-                                    <span>${item.name}</span>
-                                    <span class="price">$${item.price}</span>
-                                </div>
-                            `).join('')}
-                        </section>
-                    `;
-                    container.innerHTML += sectionHtml;
-                }
-            });
-        } catch (error) {
-            console.error("Error loading menu:", error);
-            document.getElementById('menu-container').innerHTML = "Error al cargar el menú.";
-        }
-    }
+                const rows = data.split('\n').slice(1); 
+                const menuItems = rows.map(row => {
+                    const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    return {
+                        name: columns[0]?.replace(/"/g, '').trim(),
+                        price: columns[1]?.replace(/"/g, '').trim(),
+                        type: columns[2]?.replace(/"/g, '').trim().toLowerCase()
+                    };
+                });
 
-    loadMenu();
-</script>
+                const container = document.getElementById('menu-container');
+                container.innerHTML = ''; 
+
+                sectionOrder.forEach(section => {
+                    const filteredItems = menuItems.filter(item => item.type === section);
+                    
+                    if (filteredItems.length > 0) {
+                        const sectionHtml = `
+                            <section class="menu-section">
+                                <h2 class="section-title">${section}</h2>
+                                ${filteredItems.map((item, index) => `
+                                    <div class="item">
+                                        ${item.name}
+                                        <span class="price">$${item.price}</span>
+                                        ${index < filteredItems.length - 1 ? '<div class="separator-text">or</div>' : ''}
+                                    </div>
+                                `).join('')}
+                            </section>
+                        `;
+                        container.innerHTML += sectionHtml;
+                    }
+                });
+            } catch (error) {
+                document.getElementById('menu-container').innerHTML = "Error al cargar el menú.";
+            }
+        }
+
+        loadMenu();
+    </script>
 </body>
 </html>
